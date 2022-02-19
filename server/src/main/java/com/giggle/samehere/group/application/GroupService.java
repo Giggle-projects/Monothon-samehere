@@ -1,18 +1,17 @@
 package com.giggle.samehere.group.application;
 
 import com.giggle.samehere.card.domain.Card;
-import com.giggle.samehere.card.application.CardDuplicateException;
-import com.giggle.samehere.group.domain.GroupRepository;
-import com.giggle.samehere.group.dto.GroupRequest;
-import com.giggle.samehere.group.dto.GroupResponse;
 import com.giggle.samehere.group.domain.CardGroup;
 import com.giggle.samehere.group.domain.CardGroupRepository;
 import com.giggle.samehere.group.domain.Group;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
+import com.giggle.samehere.group.domain.GroupRepository;
+import com.giggle.samehere.group.dto.GroupRequest;
+import com.giggle.samehere.group.dto.GroupResponse;
+import com.giggle.samehere.group.exception.GroupException;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class GroupService {
@@ -41,28 +40,33 @@ public class GroupService {
 
     @Transactional(readOnly = true)
     public GroupResponse findById(Long id) {
-        final Group group = getGroup(id);
+        final Group group = findGroupById(id);
         return GroupResponse.of(group);
     }
 
     @Transactional
     public GroupResponse update(Long id, GroupRequest request) {
-        final Group group = getGroup(id);
+        final Group group = findGroupById(id);
         group.update(request.toEntity());
         return GroupResponse.of(group);
     }
 
     @Transactional
     public List<GroupResponse> enter(Long groupId, Card card) {
-        List<CardGroup> allByCard = cardGroupRepository.findAllByCard(card);
-        for (CardGroup cardGroup : allByCard) {
-            if (groupId.equals(cardGroup.getGroup().getId())) {
-                throw new CardDuplicateException();
-            }
-        }
-        final Group newEntered = groupRepository.findById(groupId).get();
-        cardGroupRepository.save(new CardGroup(card, newEntered));
+        final Group enteringGroup = findGroupById(groupId);
+        checkDuplicated(card, enteringGroup);
+
+        cardGroupRepository.save(new CardGroup(card, enteringGroup));
         return findAllByCard(card);
+    }
+
+    private void checkDuplicated(Card card, Group enteringGroup) {
+        cardGroupRepository.findAllByCard(card).stream()
+                .filter(it -> it.isGroup(enteringGroup))
+                .findAny()
+                .ifPresent(it -> {
+                    throw new GroupException("이미 가입된 카드입니다.");
+                });
     }
 
     @Transactional(readOnly = true)
@@ -72,7 +76,7 @@ public class GroupService {
         return GroupResponse.listOf(groups);
     }
 
-    private Group getGroup(Long id) {
+    private Group findGroupById(Long id) {
         return groupRepository.findById(id).orElseThrow(IllegalArgumentException::new);
     }
 }

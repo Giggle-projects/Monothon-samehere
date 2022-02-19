@@ -4,15 +4,18 @@ import com.giggle.samehere.card.domain.Card;
 import com.giggle.samehere.card.domain.CardItem;
 import com.giggle.samehere.card.domain.CardItemRepository;
 import com.giggle.samehere.card.domain.CardRepository;
+import com.giggle.samehere.card.domain.Item;
 import com.giggle.samehere.card.domain.ItemRepository;
+import com.giggle.samehere.card.dto.CardItemRequest;
 import com.giggle.samehere.card.dto.CardItemResponse;
 import com.giggle.samehere.card.dto.CardRequest;
 import com.giggle.samehere.card.dto.CardResponse;
 import com.giggle.samehere.card.dto.CardSimpleResponse;
+import com.giggle.samehere.card.exception.CardException;
+import com.giggle.samehere.group.application.GroupService;
 import com.giggle.samehere.group.domain.CardGroup;
 import com.giggle.samehere.group.domain.CardGroupRepository;
 import com.giggle.samehere.group.dto.GroupResponse;
-import com.giggle.samehere.group.application.GroupService;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -29,7 +32,13 @@ public class CardService {
     private final CardGroupRepository cardGroupRepository;
     private final ItemRepository itemRepository;
 
-    public CardService(GroupService groupService, CardRepository cardRepository, CardItemRepository cardItemRepository, CardGroupRepository cardGroupRepository, ItemRepository itemRepository) {
+    public CardService(
+            GroupService groupService,
+            CardRepository cardRepository,
+            CardItemRepository cardItemRepository,
+            CardGroupRepository cardGroupRepository,
+            ItemRepository itemRepository
+    ) {
         this.groupService = groupService;
         this.cardRepository = cardRepository;
         this.cardItemRepository = cardItemRepository;
@@ -106,16 +115,12 @@ public class CardService {
     }
 
     private List<CardItem> getRequestCardItems(CardRequest request, Long cardId) {
-        if(Objects.isNull(request.getCardItems())){
+        if (Objects.isNull(request.getCardItems())) {
             return Collections.emptyList();
         }
         return request.getCardItems().stream()
-                .map(it -> new CardItem(cardId, itemRepository.findById(it.getItemId()).get(), it.getValue()))
+                .map(it -> new CardItem(cardId, getItem(it), it.getValue()))
                 .collect(Collectors.toList());
-    }
-
-    private Card getCard(Long targetId) {
-        return cardRepository.findById(targetId).orElseThrow(IllegalArgumentException::new);
     }
 
     public CardResponse enterInGroup(Long cardId, Long groupId) {
@@ -123,5 +128,13 @@ public class CardService {
         final List<GroupResponse> groupResponses = groupService.enter(groupId, card);
         final List<CardItem> cardItems = cardItemRepository.findAllByCardId(card.getId());
         return CardResponse.of(card, CardItemResponse.listOf(cardItems), groupResponses);
+    }
+
+    private Item getItem(CardItemRequest it) {
+        return itemRepository.findById(it.getItemId()).orElseThrow(() -> new CardException("존재하지 않는 항목입니다."));
+    }
+
+    private Card getCard(Long targetId) {
+        return cardRepository.findById(targetId).orElseThrow(() -> new CardException("존재하지 않는 카드입니다."));
     }
 }

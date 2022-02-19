@@ -1,17 +1,22 @@
 package com.giggle.samehere.card.presentation;
 
+import com.giggle.samehere.card.application.CardService;
 import com.giggle.samehere.card.dto.CardRequest;
 import com.giggle.samehere.card.dto.CardResponse;
 import com.giggle.samehere.card.dto.CardSimpleResponse;
-import com.giggle.samehere.card.application.CardService;
 import com.giggle.samehere.file.FileService;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("cards")
@@ -26,14 +31,20 @@ public class CardController {
     }
 
     @PostMapping
-    public ResponseEntity<CardResponse> create(CardRequest request, @RequestParam(value = "image", required = false) MultipartFile multipartFile) throws IOException {
+    public ResponseEntity<CardResponse> create(
+            CardRequest request,
+            @RequestParam(value = "image", required = false) MultipartFile multipartFile
+    ) {
         final String fileName = fileService.saveImageFile(multipartFile);
         final CardResponse response = cardService.create(request, fileName);
         return ResponseEntity.ok(response);
     }
 
     @PostMapping("/groups/{groupId}")
-    public ResponseEntity<CardResponse> createInGroup(@PathVariable Long groupId, CardRequest cardRequest, @RequestParam(value = "image", required = false) MultipartFile multipartFile) throws IOException {
+    public ResponseEntity<CardResponse> createInGroup(
+            @PathVariable Long groupId, CardRequest cardRequest,
+            @RequestParam(value = "image", required = false) MultipartFile multipartFile
+    ) {
         final String imageName = fileService.saveImageFile(multipartFile);
         final CardResponse response = cardService.createInGroup(groupId, cardRequest, imageName);
         return ResponseEntity.ok(response);
@@ -53,7 +64,6 @@ public class CardController {
 
     @GetMapping("/{cardId}")
     public ResponseEntity<CardResponse> findCardById(@PathVariable Long cardId, Long myId) {
-        System.out.println(">>>>>>>>>>>>>>>>>" + myId);
         if (Objects.isNull(myId)) {
             final CardResponse response = cardService.findById(cardId);
             return ResponseEntity.ok(response);
