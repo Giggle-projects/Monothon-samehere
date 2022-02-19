@@ -1,5 +1,7 @@
 package com.giggle.samehere.config;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -9,7 +11,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
 
-    @Value("${cors.allowed.origins:}")
+    @Value("${cards.profile.image.upload.folder}")
+    private String cardUploadFolderName;
+
+    @Value("${cors.allowed.origins}")
     private String[] allowedOrigins;
 
     @Override
@@ -21,4 +26,11 @@ public class WebMvcConfig implements WebMvcConfigurer {
             .maxAge(3000);
     }
 
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        final Path fileRoot = Paths.get("./"+ cardUploadFolderName).toAbsolutePath().normalize();
+        registry
+                .addResourceHandler("/resources/**")
+                .addResourceLocations(fileRoot.toUri().toString());
+    }
 }

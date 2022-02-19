@@ -3,6 +3,8 @@ package com.giggle.samehere;
 import com.giggle.samehere.card.exception.CardDuplicateException;
 import com.giggle.samehere.file.exception.FileUploadException;
 import com.giggle.samehere.group.exception.GroupException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -10,9 +12,11 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalAdvisor {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(GlobalAdvisor.class);
+
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<ErrorResponse> handleUnexpectedException() {
-        // TODO :: LOGGER
+    public ResponseEntity<ErrorResponse> handleUnexpectedException(RuntimeException e) {
+        LOGGER.error(e.getMessage());
         return ResponseEntity.internalServerError().body(new ErrorResponse("unexpected exception"));
     }
 

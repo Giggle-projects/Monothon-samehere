@@ -1,29 +1,46 @@
 package com.giggle.samehere.file;
 
+import com.giggle.samehere.file.exception.FileUploadException;
 import java.io.IOException;
-import java.time.LocalDateTime;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.Objects;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class FileService {
 
-    private static final String ROOT_PATH = "/resources";
-    private static final String DEFAULT_FILE_NAME = "default.png";
-    private static final String PHOTO_UPLOAD_FOLDER = "card-photos";
+    @Value("${cards.profile.image.resource.root}")
+    private String ROOT_PATH;
+
+    @Value("${cards.profile.image.default.name}")
+    private String DEFAULT_FILE_NAME;
+
+    @Value("${cards.profile.image.upload.folder}")
+    private String PHOTO_UPLOAD_FOLDER;
 
     public String saveImageFile(MultipartFile multipartFile) {
-        if (Objects.isNull(multipartFile)) {
-            return ROOT_PATH + "/" + DEFAULT_FILE_NAME;
+        try (InputStream inputStream = multipartFile.getInputStream()) {
+            // TODO :: file duplicated check
+            final FilePath filePath = FilePath.of(multipartFile);
+            Files.copy(inputStream, filePath.asPathIn(directoryPath()), StandardCopyOption.REPLACE_EXISTING);
+            return ROOT_PATH + filePath.asString();
+        } catch (FileUploadException | IOException e) {
+            // TODO :: throw new FileUploadException(e.getMessage());
+            return ROOT_PATH + DEFAULT_FILE_NAME;
         }
-        try {
-            final String imageName = LocalDateTime.now() + StringUtils.cleanPath(multipartFile.getOriginalFilename());
-            FileUploadUtil.saveFile(PHOTO_UPLOAD_FOLDER, imageName, multipartFile);
-            return ROOT_PATH + "/" + imageName;
-        } catch (IOException e) {
-            return ROOT_PATH + "/" + DEFAULT_FILE_NAME;
+    }
+
+    private Path directoryPath() throws IOException {
+        final Path directoryPath = Paths.get(PHOTO_UPLOAD_FOLDER);
+        if (!Files.exists(directoryPath)) {
+            Files.createDirectories(directoryPath);
         }
+        return directoryPath;
     }
 }
