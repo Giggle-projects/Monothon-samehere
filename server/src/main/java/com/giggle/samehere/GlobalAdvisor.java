@@ -1,6 +1,6 @@
 package com.giggle.samehere;
 
-import com.giggle.samehere.card.exception.CardDuplicateException;
+import com.giggle.samehere.card.exception.CardException;
 import com.giggle.samehere.file.exception.FileUploadException;
 import com.giggle.samehere.group.exception.GroupException;
 import org.slf4j.Logger;
@@ -25,8 +25,8 @@ public class GlobalAdvisor {
         return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
     }
 
-    @ExceptionHandler(CardDuplicateException.class)
-    public ResponseEntity<ErrorResponse> handleCardDuplicateException(CardDuplicateException e) {
+    @ExceptionHandler(CardException.class)
+    public ResponseEntity<ErrorResponse> handleCardDuplicateException(CardException e) {
         return ResponseEntity.badRequest().body(new ErrorResponse("선택하신 이메일이 이미 사용 중입니다."));
     }
 
