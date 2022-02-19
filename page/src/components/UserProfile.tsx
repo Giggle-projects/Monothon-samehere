@@ -39,7 +39,6 @@ const UserProfile: FC<Props> = ({ userId }) => {
             <Label
               key={idx}
               title={(enToKR as any)[itemName]}
-              sameHere={item.sameHere}
               content={item.value}
             />
           ))}
