@@ -30,7 +30,8 @@ public class FileService {
             final FilePath filePath = FilePath.of(multipartFile);
             Files.copy(inputStream, filePath.asPathIn(directoryPath()), StandardCopyOption.REPLACE_EXISTING);
             return ROOT_PATH + filePath.asString();
-        } catch (FileUploadException | IOException e) {
+        } catch (FileUploadException | IOException | NullPointerException e) {
+            // TODO :: handle case multipartFile is null
             // TODO :: throw new FileUploadException(e.getMessage());
             return ROOT_PATH + DEFAULT_FILE_NAME;
         }

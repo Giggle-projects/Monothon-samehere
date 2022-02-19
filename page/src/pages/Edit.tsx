@@ -238,7 +238,7 @@ const Edit = () => {
                 title="생년월일"
                 value={birthDate}
                 name="birthDate"
-                placeholder="ex) 2004.08.08"
+                placeholder="ex) 2000.01.01"
                 onChange={onChangeHandler}
               />
               <Input

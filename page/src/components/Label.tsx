@@ -1,20 +1,16 @@
 import styled from "@emotion/styled";
 import { FC } from "react";
-import { CardItems } from "../apis";
 import { colors } from "../design-token";
-import Badge from "./common/Badge";
 
 interface Props {
   title: string;
   content: string;
-  sameHere: boolean;
 }
-const Label: FC<Props> = ({ title, content, sameHere = false }) => {
+const Label: FC<Props> = ({ title, content}) => {
   return (
     <LabelTextStyle>
       <div className="top">
         <div className="title">{title}</div>
-        {sameHere && <Badge>Same Here 👋</Badge>}
       </div>
       <div className="content">{content}</div>
     </LabelTextStyle>

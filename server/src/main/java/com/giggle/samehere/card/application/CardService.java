@@ -69,32 +69,6 @@ public class CardService {
     }
 
     @Transactional(readOnly = true)
-    public CardResponse findWithComparing(Long targetId, Long myId) {
-        final Card target = getCard(targetId);
-        final Card mine = getCard(myId);
-
-        final List<CardItem> targetItems = cardItemRepository.findAllByCardId(target.getId());
-        final List<CardItem> myItems = cardItemRepository.findAllByCardId(mine.getId());
-
-        final List<CardItemResponse> responses = targetItems.stream()
-                .map(it -> compareWithMine(it, myItems))
-                .collect(Collectors.toList());
-
-        return CardResponse.of(target, responses, groupService.findAllByCard(target));
-    }
-
-    private CardItemResponse compareWithMine(CardItem targetItem, List<CardItem> myItems) {
-        if (isIncluded(targetItem, myItems)) {
-            return CardItemResponse.sameHere(targetItem);
-        }
-        return CardItemResponse.of(targetItem);
-    }
-
-    private boolean isIncluded(CardItem targetItem, List<CardItem> myItems) {
-        return myItems.stream().anyMatch(targetItem::isSame);
-    }
-
-    @Transactional(readOnly = true)
     public List<CardSimpleResponse> findAllCardsByGroup(Long groupId) {
         final List<CardGroup> cardGroups = cardGroupRepository.findAllByGroupId(groupId);
         final List<Card> cardsInGroup = cardGroups.stream().map(CardGroup::getCard).collect(Collectors.toList());

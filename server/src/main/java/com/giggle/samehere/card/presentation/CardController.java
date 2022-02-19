@@ -6,7 +6,6 @@ import com.giggle.samehere.card.dto.CardResponse;
 import com.giggle.samehere.card.dto.CardSimpleResponse;
 import com.giggle.samehere.file.FileService;
 import java.util.List;
-import java.util.Objects;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -63,12 +62,8 @@ public class CardController {
     }
 
     @GetMapping("/{cardId}")
-    public ResponseEntity<CardResponse> findCardById(@PathVariable Long cardId, Long myId) {
-        if (Objects.isNull(myId)) {
-            final CardResponse response = cardService.findById(cardId);
-            return ResponseEntity.ok(response);
-        }
-        final CardResponse response = cardService.findWithComparing(cardId, myId);
+    public ResponseEntity<CardResponse> findCardById(@PathVariable Long cardId) {
+        final CardResponse response = cardService.findById(cardId);
         return ResponseEntity.ok(response);
     }
 
