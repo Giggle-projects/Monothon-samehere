@@ -22,8 +22,8 @@ export const createGroup = (data: CreateGroupPayload) =>
 export interface CardItems {
   itemName: string;
   value: string;
-  sameHere: boolean;
 }
+
 export interface EditCardItems {
   itemId: number;
   value: string;

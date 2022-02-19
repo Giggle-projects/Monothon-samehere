@@ -1,22 +1,13 @@
 import styled from "@emotion/styled";
 import ProfileCard from "./ProfileCard";
 import Label from "./Label";
-import { FC, useEffect, useState } from "react";
-import { getCard, GetCardResponse } from "../apis";
+import {FC, useEffect, useState} from "react";
+import {getCard, GetCardResponse} from "../apis";
 
 interface Props {
   userId: number;
 }
 
-const enToKR = {
-  mbti: "MBTI",
-  bio: "자기소개",
-  likeSeason: "좋아하는 계절",
-  likeFood: "좋아하는 음식",
-  birthDate: "생년월일",
-  github: "깃허브",
-  linkedIn: "링크드인",
-};
 const UserProfile: FC<Props> = ({ userId }) => {
   const [data, setData] = useState<GetCardResponse>();
   useEffect(() => {
@@ -32,13 +23,13 @@ const UserProfile: FC<Props> = ({ userId }) => {
             email={data.email}
             imageUrl={data.imageUrl}
             job={data.profession}
-          ></ProfileCard>
+          />
         )}
         <LabelWrapper>
-          {data?.cardItems.map(({ itemName, ...item }, idx) => (
+          {data?.cardItems.map(({...item}, idx) => (
             <Label
               key={idx}
-              title={(enToKR as any)[itemName]}
+              title={item.itemName}
               content={item.value}
             />
           ))}
