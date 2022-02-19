@@ -9,12 +9,10 @@ public class CardItemResponse {
 
     private final String itemName;
     private final String value;
-    private final boolean sameHere;
 
-    public CardItemResponse(String itemName, String value, boolean sameHere) {
+    public CardItemResponse(String itemName, String value) {
         this.itemName = itemName;
         this.value = value;
-        this.sameHere = sameHere;
     }
 
     public static List<CardItemResponse> listOf(List<CardItem> cardItems) {
@@ -24,16 +22,7 @@ public class CardItemResponse {
     public static CardItemResponse of(CardItem cardItem) {
         return new CardItemResponse(
                 cardItem.getItem().getName(),
-                cardItem.getValue(),
-                false
-        );
-    }
-
-    public static CardItemResponse sameHere(CardItem cardItem) {
-        return new CardItemResponse(
-                cardItem.getItem().getName(),
-                cardItem.getValue(),
-                true
+                cardItem.getValue()
         );
     }
 
@@ -43,9 +32,5 @@ public class CardItemResponse {
 
     public String getValue() {
         return value;
-    }
-
-    public boolean isSameHere() {
-        return sameHere;
     }
 }

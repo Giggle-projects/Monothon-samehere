@@ -62,10 +62,9 @@ public class Card {
         return image;
     }
 
-    @Transient
+    // TODO :: 저장 경로 수정
     public String getPhotosImagePath() {
         if (image == null || id == null) return null;
-
         return "/card-photos/" + id + "/" + image;
     }
 

@@ -37,15 +37,4 @@ public class CardItem {
     public String getValue() {
         return value;
     }
-
-    public void update(String value) {
-        this.value = value;
-    }
-
-    public boolean isSame(CardItem other) {
-        if(this.item.equals(other.item)) {
-            return this.value.equals(other.value);
-        }
-        return false;
-    }
 }

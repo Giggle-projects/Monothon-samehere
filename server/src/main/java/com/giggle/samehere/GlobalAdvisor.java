@@ -16,7 +16,8 @@ public class GlobalAdvisor {
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ErrorResponse> handleUnexpectedException(RuntimeException e) {
-        LOGGER.error(e.getMessage());
+        LOGGER.error(String.valueOf(e.getCause()));
+        e.printStackTrace();
         return ResponseEntity.internalServerError().body(new ErrorResponse("unexpected exception"));
     }
 
