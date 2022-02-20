@@ -79,9 +79,7 @@ export const getGroup = (groupId: number) =>
   request.get<GetGroupResponse>(`/groups/${groupId}`);
 export const getCard = (userId: number) =>
   request.get<GetCardResponse>(
-    `/cards/${userId}${
-      window.localStorage.myId ? `?myId=${window.localStorage.myId}` : ""
-    }`
+    `/cards/${userId}`
   );
 
 export const joinGroup = (cardId: number, groupId: number) =>

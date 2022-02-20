@@ -23,9 +23,9 @@ export function getCookie(cookieName: string) {
 
 const Join = () => {
   const { groupId } = useParams();
-  const naviagte = useNavigate();
+  const navigate = useNavigate();
   const [value, setValue] = useState({
-    number: window.localStorage.myId,
+    number: "0",
     password: "",
   });
 
@@ -49,7 +49,7 @@ const Join = () => {
       number &&
         groupId &&
         (await joinGroup(parseInt(number), parseInt(groupId)));
-      number && groupId && naviagte(`/group/${groupId}`);
+      number && groupId && navigate(`/group/${groupId}`);
     } catch (e: any) {
       alert(e.response.data.message);
     }
@@ -81,7 +81,7 @@ const Join = () => {
           </div>
           <div
             className="button-create-profile"
-            onClick={() => naviagte("/create")}
+            onClick={() => navigate("/create")}
           >
             <div className="button-title">프로필 만들기</div>
             <RightArrowIcon />

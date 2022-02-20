@@ -108,7 +108,6 @@ const Create = () => {
         ],
       });
       navigate(`/profile/${data.id}`);
-      window.localStorage.setItem("myId", String(data.id));
     } catch (e: any) {
       alert(e.response.data.message);
       setPage(0);
@@ -214,7 +213,7 @@ const Create = () => {
                 title="생년월일"
                 value={birthDate}
                 name="birthDate"
-                placeholder="ex) 2004.08.08"
+                placeholder="ex) 2000.01.01"
                 onChange={onChangeHandler}
               />
               <Input
