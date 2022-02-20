@@ -25,7 +25,7 @@ const Join = () => {
   const { groupId } = useParams();
   const navigate = useNavigate();
   const [value, setValue] = useState({
-    number: window.localStorage.myId,
+    number: "0",
     password: "",
   });
 
