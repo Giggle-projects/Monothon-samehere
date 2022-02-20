@@ -36,3 +36,16 @@ public class GlobalAdvisor {
         return ResponseEntity.badRequest().body(new ErrorResponse("사진을 업로드하는 도중 오류가 발생했습니다."));
     }
 }
+
+class ErrorResponse {
+
+    private final String message;
+
+    public ErrorResponse(String message) {
+        this.message = message;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+}

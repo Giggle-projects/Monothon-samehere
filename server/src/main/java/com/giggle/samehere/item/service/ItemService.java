@@ -1,12 +1,11 @@
-package com.giggle.samehere.card.application;
+package com.giggle.samehere.item.service;
 
+import com.giggle.samehere.item.domain.Item;
+import com.giggle.samehere.item.domain.ItemRepository;
+import com.giggle.samehere.item.dto.ItemRequest;
+import com.giggle.samehere.item.dto.ItemResponse;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import com.giggle.samehere.card.domain.Item;
-import com.giggle.samehere.card.domain.ItemRepository;
-import com.giggle.samehere.card.dto.ItemRequest;
-import com.giggle.samehere.card.dto.ItemResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,21 +28,19 @@ public class ItemService {
     @Transactional(readOnly = true)
     public List<ItemResponse> findAllItems() {
         return itemRepository.findAll().stream()
-            .map(ItemResponse::of)
-            .collect(Collectors.toList());
+                .map(ItemResponse::of)
+                .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
     public ItemResponse findById(Long id) {
-        final Item item = itemRepository.findById(id)
-            .orElseThrow(IllegalArgumentException::new);
+        final Item item = itemRepository.findById(id).orElseThrow(IllegalArgumentException::new);
         return ItemResponse.of(item);
     }
 
     @Transactional
     public ItemResponse update(Long id, ItemRequest request) {
-        final Item item = itemRepository.findById(id)
-            .orElseThrow(IllegalArgumentException::new);
+        final Item item = itemRepository.findById(id).orElseThrow(IllegalArgumentException::new);
         item.update(request.toItem());
         return ItemResponse.of(item);
     }

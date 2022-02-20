@@ -1,5 +1,6 @@
 package com.giggle.samehere.card.domain;
 
+import com.giggle.samehere.item.domain.Item;
 import javax.persistence.*;
 
 @Entity
@@ -12,14 +13,18 @@ public class CardItem {
 
     @ManyToOne
     private Item item;
-    private String value;
+    private String answer;
 
     protected CardItem() {}
 
-    public CardItem(Long cardId, Item item, String value) {
+    public CardItem(Long cardId, Item item, String answer) {
         this.cardId = cardId;
         this.item = item;
-        this.value = value;
+        this.answer = answer;
+    }
+
+    public void validateAnswer() {
+        item.validateAnswerInChoices(answer);
     }
 
     public Long getId() {
@@ -34,7 +39,7 @@ public class CardItem {
         return item;
     }
 
-    public String getValue() {
-        return value;
+    public String getAnswer() {
+        return answer;
     }
 }

@@ -4,9 +4,6 @@ import com.giggle.samehere.card.domain.Card;
 import com.giggle.samehere.card.domain.CardItem;
 import com.giggle.samehere.card.domain.CardItemRepository;
 import com.giggle.samehere.card.domain.CardRepository;
-import com.giggle.samehere.card.domain.Item;
-import com.giggle.samehere.card.domain.ItemRepository;
-import com.giggle.samehere.card.dto.CardItemRequest;
 import com.giggle.samehere.card.dto.CardItemResponse;
 import com.giggle.samehere.card.dto.CardRequest;
 import com.giggle.samehere.card.dto.CardResponse;
@@ -16,9 +13,10 @@ import com.giggle.samehere.group.application.GroupService;
 import com.giggle.samehere.group.domain.CardGroup;
 import com.giggle.samehere.group.domain.CardGroupRepository;
 import com.giggle.samehere.group.dto.GroupResponse;
+import com.giggle.samehere.item.domain.Item;
+import com.giggle.samehere.item.domain.ItemRepository;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,7 +53,8 @@ public class CardService {
 
     @Transactional
     public CardResponse createInGroup(Long groupId, CardRequest request, String imageFile) {
-        final Card card = cardRepository.save(request.toCard(imageFile));
+        final Card card = request.toCard(imageFile);
+        cardRepository.save(card);
         final List<GroupResponse> groupResponses = groupService.enter(groupId, card);
         return CardResponse.of(card, Collections.emptyList(), groupResponses);
     }
@@ -81,6 +80,8 @@ public class CardService {
         card.update(request.toCard(card.getPhotosImagePath()));
 
         final List<CardItem> cardItems = getRequestCardItems(request, id);
+        cardItems.forEach(CardItem::validateAnswer);
+
         cardItemRepository.deleteAllByCardId(id);
         cardItemRepository.saveAll(cardItems);
 
@@ -89,14 +90,12 @@ public class CardService {
     }
 
     private List<CardItem> getRequestCardItems(CardRequest request, Long cardId) {
-        if (Objects.isNull(request.getCardItems())) {
-            return Collections.emptyList();
-        }
         return request.getCardItems().stream()
-                .map(it -> new CardItem(cardId, getItem(it), it.getValue()))
+                .map(it -> new CardItem(cardId, getItem(it.getItemId()), it.getValue()))
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public CardResponse enterInGroup(Long cardId, Long groupId) {
         final Card card = getCard(cardId);
         final List<GroupResponse> groupResponses = groupService.enter(groupId, card);
@@ -104,8 +103,8 @@ public class CardService {
         return CardResponse.of(card, CardItemResponse.listOf(cardItems), groupResponses);
     }
 
-    private Item getItem(CardItemRequest it) {
-        return itemRepository.findById(it.getItemId()).orElseThrow(() -> new CardException("존재하지 않는 항목입니다."));
+    private Item getItem(Long itemId) {
+        return itemRepository.findById(itemId).orElseThrow(() -> new CardException("존재하지 않는 항목입니다."));
     }
 
     private Card getCard(Long targetId) {

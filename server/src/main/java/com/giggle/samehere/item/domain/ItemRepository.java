@@ -1,4 +1,4 @@
-package com.giggle.samehere.card.domain;
+package com.giggle.samehere.item.domain;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

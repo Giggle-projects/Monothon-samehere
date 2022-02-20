@@ -1,10 +1,9 @@
-package com.giggle.samehere.card.presentation;
+package com.giggle.samehere.item.presentation;
 
-import com.giggle.samehere.card.application.ItemService;
+import com.giggle.samehere.item.dto.ItemRequest;
+import com.giggle.samehere.item.dto.ItemResponse;
+import com.giggle.samehere.item.service.ItemService;
 import java.util.List;
-
-import com.giggle.samehere.card.dto.ItemRequest;
-import com.giggle.samehere.card.dto.ItemResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

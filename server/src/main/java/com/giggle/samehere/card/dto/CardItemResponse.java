@@ -22,7 +22,7 @@ public class CardItemResponse {
     public static CardItemResponse of(CardItem cardItem) {
         return new CardItemResponse(
                 cardItem.getItem().getName(),
-                cardItem.getValue()
+                cardItem.getAnswer()
         );
     }
 
