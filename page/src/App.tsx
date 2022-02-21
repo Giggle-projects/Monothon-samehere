@@ -2,7 +2,7 @@ import { BrowserRouter } from "react-router-dom";
 import { Route, Routes } from "react-router";
 import Profile from "./pages/Profile";
 import Join from "./pages/Join";
-import Create from "./pages/Create";
+import Create from "./pages/create/Create";
 import Group from "./pages/Group";
 import Edit from "./pages/Edit";
 
