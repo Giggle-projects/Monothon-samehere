@@ -24,6 +24,14 @@ export interface CardItems {
   value: string;
 }
 
+export type ItemResponse = Item[];
+
+export interface Item {
+  id :number;
+  name: string;
+  itemChoices:string[];
+}
+
 export interface EditCardItems {
   itemId: number;
   value: string;
@@ -58,6 +66,9 @@ export const createCard = (data: FormData) =>
       "Content-Type": "multipart/form-data",
     },
   });
+
+export const getItems = () =>
+    request.get<ItemResponse>("/items")
 
 export const editCard = (cardId: number, data: EditCardPayload) =>
   request.put(`/cards/${cardId}`, data);
