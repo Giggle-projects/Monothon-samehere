@@ -1,7 +1,11 @@
 package com.giggle.samehere.card.domain;
 
 import com.giggle.samehere.item.domain.Item;
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class CardItem {
@@ -24,7 +28,7 @@ public class CardItem {
     }
 
     public void validateAnswer() {
-        item.validateAnswerInChoices(answer);
+        item.validateAnswer(answer);
     }
 
     public Long getId() {

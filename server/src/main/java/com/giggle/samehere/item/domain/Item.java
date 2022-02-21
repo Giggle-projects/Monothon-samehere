@@ -1,9 +1,10 @@
 package com.giggle.samehere.item.domain;
 
-import com.giggle.samehere.card.exception.CardException;
 import java.util.Objects;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -14,6 +15,9 @@ public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Enumerated(EnumType.STRING)
+    private ItemAnswerType itemAnswerType;
     private String name;
 
     @Embedded
@@ -21,19 +25,32 @@ public class Item {
 
     protected Item() {}
 
-    public Item(String name, ItemChoices itemChoices) {
+    private Item(ItemAnswerType itemAnswerType, String name, ItemChoices itemChoices) {
+        this.itemAnswerType = itemAnswerType;
         this.name = name;
         this.itemChoices = itemChoices;
     }
 
-    public void update(Item other) {
+    public static Item shortQuestion(String name) {
+        return new Item(ItemAnswerType.SHORT, name, ItemChoices.None());
+    }
+
+    public static Item multipleChoicesQuestion(String name, ItemChoices itemChoices) {
+        return new Item(ItemAnswerType.MULTIPLE, name, itemChoices);
+    }
+
+    public void updateName(Item other) {
         this.name = other.name;
     }
 
-    public void validateAnswerInChoices(String answer) {
-        if(!itemChoices.isAnswerInChoices(answer)) {
-            throw new CardException(answer+"는 존재하지 않는 답변입니다.");
+    public void validateAnswer(String answer) {
+        if (itemAnswerType == ItemAnswerType.MULTIPLE) {
+            itemChoices.validateAnswerInChoices(answer);
         }
+    }
+
+    public boolean isAnswerType(ItemAnswerType type) {
+        return itemAnswerType == type;
     }
 
     public Long getId() {
@@ -64,4 +81,9 @@ public class Item {
     public int hashCode() {
         return Objects.hash(id, name);
     }
+
+    public ItemAnswerType getItemType() {
+        return itemAnswerType;
+    }
 }
+

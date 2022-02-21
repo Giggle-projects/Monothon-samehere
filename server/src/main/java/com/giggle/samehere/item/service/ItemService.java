@@ -41,7 +41,7 @@ public class ItemService {
     @Transactional
     public ItemResponse update(Long id, ItemRequest request) {
         final Item item = itemRepository.findById(id).orElseThrow(IllegalArgumentException::new);
-        item.update(request.toItem());
+        item.updateName(request.toItem());
         return ItemResponse.of(item);
     }
 }

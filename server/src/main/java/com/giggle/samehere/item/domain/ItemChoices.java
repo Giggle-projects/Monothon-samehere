@@ -1,7 +1,6 @@
 package com.giggle.samehere.item.domain;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Arrays;
 import java.util.Collections;
@@ -32,6 +31,10 @@ public class ItemChoices {
         this(Arrays.asList(itemChoiceNames));
     }
 
+    public static ItemChoices None() {
+        return new ItemChoices(Collections.emptyList());
+    }
+
     public List<String> itemChoices() {
         try {
             if (itemChoicesAsData.isEmpty()) {
@@ -43,10 +46,10 @@ public class ItemChoices {
         }
     }
 
-    public boolean isAnswerInChoices(String answer) {
-        if(answer.isEmpty()) {
-            return true;
-        }
-        return itemChoices().stream().anyMatch(it -> it.equals(answer));
+    public void validateAnswerInChoices(String answer) {
+        itemChoices().stream()
+                .filter(it -> it.equals(answer))
+                .findAny()
+                .orElseThrow(() -> new IllegalArgumentException(answer + "는 존재하지 않는 답변입니다."));
     }
 }
