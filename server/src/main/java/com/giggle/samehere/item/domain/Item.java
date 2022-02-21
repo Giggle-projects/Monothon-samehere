@@ -1,5 +1,6 @@
 package com.giggle.samehere.item.domain;
 
+import com.giggle.samehere.item.exception.ItemException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -52,7 +53,7 @@ public class Item {
             itemChoices.stream()
                     .filter(it -> it.equals(answer))
                     .findAny()
-                    .orElseThrow(() -> new IllegalArgumentException(answer + "는 존재하지 않는 답변입니다."));
+                    .orElseThrow(() -> new ItemException("\'"+answer+"\'는 " + name + "의 답변이 될 수 없습니다."));
         }
     }
 

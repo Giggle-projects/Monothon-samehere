@@ -3,6 +3,7 @@ package com.giggle.samehere;
 import com.giggle.samehere.card.exception.CardException;
 import com.giggle.samehere.file.exception.FileUploadException;
 import com.giggle.samehere.group.exception.GroupException;
+import com.giggle.samehere.item.exception.ItemException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -21,14 +22,9 @@ public class GlobalAdvisor {
         return ResponseEntity.internalServerError().body(new ErrorResponse("unexpected exception"));
     }
 
-    @ExceptionHandler(GroupException.class)
-    public ResponseEntity<ErrorResponse> handleGroupException(GroupException e) {
+    @ExceptionHandler({GroupException.class, ItemException.class, CardException.class})
+    public ResponseEntity<ErrorResponse> handleExpectedDomainException(RuntimeException e) {
         return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
-    }
-
-    @ExceptionHandler(CardException.class)
-    public ResponseEntity<ErrorResponse> handleCardDuplicateException(CardException e) {
-        return ResponseEntity.badRequest().body(new ErrorResponse("선택하신 이메일이 이미 사용 중입니다."));
     }
 
     @ExceptionHandler(FileUploadException.class)
