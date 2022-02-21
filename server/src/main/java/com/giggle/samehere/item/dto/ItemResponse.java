@@ -2,7 +2,6 @@ package com.giggle.samehere.item.dto;
 
 import com.giggle.samehere.item.domain.Item;
 import com.giggle.samehere.item.domain.ItemAnswerType;
-import java.util.Collections;
 import java.util.List;
 
 public class ItemResponse {
@@ -20,11 +19,7 @@ public class ItemResponse {
     }
 
     public static ItemResponse of(Item item) {
-        if (item.isAnswerType(ItemAnswerType.SHORT)) {
-            return new ItemResponse(item.getId(), ItemAnswerType.SHORT, item.getName(), Collections.emptyList());
-        }
-        return new ItemResponse(item.getId(), ItemAnswerType.MULTIPLE, item.getName(),
-                item.getItemChoices().itemChoices());
+        return new ItemResponse(item.getId(), item.getItemType(), item.getName(), item.getItemChoices());
     }
 
     public Long getId() {

@@ -1,7 +1,6 @@
 package com.giggle.samehere.item.dto;
 
 import com.giggle.samehere.item.domain.Item;
-import com.giggle.samehere.item.domain.ItemChoices;
 import java.util.List;
 import java.util.Objects;
 
@@ -20,9 +19,9 @@ public class ItemRequest {
 
     public Item toItem() {
         if (Objects.isNull(itemChoices) || itemChoices.isEmpty()) {
-            return Item.shortQuestion(name);
+            return Item.shortAnswerQuestion(name);
         }
-        return Item.multipleChoicesQuestion(name, new ItemChoices(itemChoices));
+        return Item.multipleChoicesQuestion(name, itemChoices);
     }
 
     public String getName() {
