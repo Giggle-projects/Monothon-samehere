@@ -7,20 +7,20 @@ import java.util.Objects;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-public class FilePath {
+public class MultipartFileName {
 
     private final String fileName;
 
-    public FilePath(String fileName) {
+    public MultipartFileName(String fileName) {
         this.fileName = fileName;
     }
 
-    public static FilePath of(MultipartFile multipartFile) {
+    public static MultipartFileName of(MultipartFile multipartFile) {
         if (Objects.isNull(multipartFile) || multipartFile.isEmpty()) {
             throw new FileUploadException();
         }
         final String uniqueFileName = LocalDateTime.now() + StringUtils.cleanPath(multipartFile.getOriginalFilename());
-        return new FilePath(uniqueFileName);
+        return new MultipartFileName(uniqueFileName);
     }
 
     public Path asPathIn(Path path) {

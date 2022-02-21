@@ -8,6 +8,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Objects;
+import java.util.UUID;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,16 +26,29 @@ public class FileService {
     private String PHOTO_UPLOAD_FOLDER;
 
     public String saveImageFile(MultipartFile multipartFile) {
-        try (InputStream inputStream = multipartFile.getInputStream()) {
-            // TODO :: file duplicated check
-            final FilePath filePath = FilePath.of(multipartFile);
-            Files.copy(inputStream, filePath.asPathIn(directoryPath()), StandardCopyOption.REPLACE_EXISTING);
-            return ROOT_PATH + filePath.asString();
-        } catch (FileUploadException | IOException | NullPointerException e) {
-            // TODO :: handle case multipartFile is null
-            // TODO :: throw new FileUploadException(e.getMessage());
+        if (Objects.isNull(multipartFile) || multipartFile.isEmpty()) {
             return ROOT_PATH + DEFAULT_FILE_NAME;
         }
+        try (InputStream inputStream = multipartFile.getInputStream()) {
+            final MultipartFileName fileName = MultipartFileName.of(multipartFile);
+            saveFile(inputStream, fileName.asPathIn(directoryPath()));
+            return ROOT_PATH + fileName.asString();
+        } catch (FileUploadException | IOException e) {
+            e.printStackTrace();
+            return ROOT_PATH + DEFAULT_FILE_NAME;
+        }
+    }
+
+    private void saveFile(InputStream inputStream, Path path) throws IOException {
+        final Path uniquePath = findUniquePath(path);
+        Files.copy(inputStream, uniquePath, StandardCopyOption.REPLACE_EXISTING);
+    }
+
+    private Path findUniquePath(Path path) {
+        if (Files.exists(path)) {
+            return findUniquePath(Path.of(path + UUID.randomUUID().toString().substring(0, 5)));
+        }
+        return path;
     }
 
     private Path directoryPath() throws IOException {
