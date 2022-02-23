@@ -5,6 +5,7 @@ import com.giggle.samehere.card.dto.CardRequest;
 import com.giggle.samehere.card.dto.CardResponse;
 import com.giggle.samehere.card.dto.CardSimpleResponse;
 import com.giggle.samehere.file.FileService;
+import com.giggle.samehere.file.exception.FileUploadException;
 import java.util.List;
 import java.util.Objects;
 import org.springframework.http.ResponseEntity;
@@ -33,29 +34,33 @@ public class CardController {
     @PostMapping
     public ResponseEntity<CardResponse> create(
             CardRequest request,
-            @RequestParam(value = "image", required = false) MultipartFile multipartFile
+            @RequestParam(required = false) MultipartFile image
     ) {
-        if(Objects.isNull(multipartFile) || multipartFile.isEmpty()) {
-            return ResponseEntity.ok(cardService.create(request));
-        }
-
-        final String fileName = fileService.saveImageFile(multipartFile);
-        final CardResponse response = cardService.create(request, fileName);
+        final CardResponse response = createCard(request, image);
         return ResponseEntity.ok(response);
     }
 
     @PostMapping("/groups/{groupId}")
-    public ResponseEntity<CardResponse> createInGroup(
-            @PathVariable Long groupId, CardRequest cardRequest,
-            @RequestParam(value = "image", required = false) MultipartFile multipartFile
+    public ResponseEntity<CardResponse> create(
+            @PathVariable Long groupId,
+            CardRequest request,
+            @RequestParam(required = false) MultipartFile image
     ) {
-        final String imageName = fileService.saveImageFile(multipartFile);
-        final CardResponse response = cardService.createInGroup(groupId, cardRequest, imageName);
-        return ResponseEntity.ok(response);
+        final CardResponse savedCard = createCard(request, image);
+        return joinInGroup(savedCard.getId(), groupId);
+    }
+
+    private CardResponse createCard(CardRequest request, MultipartFile multipartFile) {
+        try {
+            final String imageFile = fileService.saveImageFile(multipartFile);
+            return cardService.create(request, imageFile);
+        } catch (FileUploadException e) {
+            return cardService.create(request);
+        }
     }
 
     @PostMapping("/{cardId}/groups/{groupId}")
-    public ResponseEntity<CardResponse> enter(@PathVariable Long cardId, @PathVariable Long groupId) {
+    public ResponseEntity<CardResponse> joinInGroup(@PathVariable Long cardId, @PathVariable Long groupId) {
         final CardResponse response = cardService.enterInGroup(cardId, groupId);
         return ResponseEntity.ok(response);
     }
