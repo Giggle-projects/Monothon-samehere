@@ -4,10 +4,11 @@ import com.giggle.samehere.card.application.CardService;
 import com.giggle.samehere.card.dto.CardRequest;
 import com.giggle.samehere.card.dto.CardResponse;
 import com.giggle.samehere.card.dto.CardSimpleResponse;
-import com.giggle.samehere.file.FileService;
+import com.giggle.samehere.file.domain.ImageFile;
+import com.giggle.samehere.file.application.ImageFileService;
+import com.giggle.samehere.file.dto.ImageFileResponse;
 import com.giggle.samehere.file.exception.FileUploadException;
 import java.util.List;
-import java.util.Objects;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,11 +25,11 @@ import org.springframework.web.multipart.MultipartFile;
 public class CardController {
 
     private final CardService cardService;
-    private final FileService fileService;
+    private final ImageFileService imageFileService;
 
-    public CardController(CardService cardService, FileService fileService) {
+    public CardController(CardService cardService, ImageFileService imageFileService) {
         this.cardService = cardService;
-        this.fileService = fileService;
+        this.imageFileService = imageFileService;
     }
 
     @PostMapping
@@ -52,7 +53,7 @@ public class CardController {
 
     private CardResponse createCard(CardRequest request, MultipartFile multipartFile) {
         try {
-            final String imageFile = fileService.saveImageFile(multipartFile);
+            final ImageFileResponse imageFile = imageFileService.save(multipartFile);
             return cardService.create(request, imageFile);
         } catch (FileUploadException e) {
             return cardService.create(request);

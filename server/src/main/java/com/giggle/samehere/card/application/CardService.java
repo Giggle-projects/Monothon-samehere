@@ -8,6 +8,7 @@ import com.giggle.samehere.card.dto.CardRequest;
 import com.giggle.samehere.card.dto.CardResponse;
 import com.giggle.samehere.card.dto.CardSimpleResponse;
 import com.giggle.samehere.card.exception.CardException;
+import com.giggle.samehere.file.dto.ImageFileResponse;
 import com.giggle.samehere.group.domain.CardGroup;
 import com.giggle.samehere.group.domain.CardGroupRepository;
 import com.giggle.samehere.group.domain.Group;
@@ -47,15 +48,17 @@ public class CardService {
     }
 
     @Transactional
-    public CardResponse create(CardRequest request, String imageFile) {
-        final Card card = request.toCard(imageFile);
+    public CardResponse create(CardRequest request, ImageFileResponse imageFile) {
+        final Card card = request.toCard(imageFile.getPath());
         cardRepository.save(card);
         return cardResponse(card);
     }
 
     @Transactional
     public CardResponse create(CardRequest request) {
-        return create(request, PROFILE_IMAGE_REQUEST_ROOT_PATH + "/" + DEFAULT_PROFILE_IMAGE_FILE_NAME);
+        final Card card = request.toCard(PROFILE_IMAGE_REQUEST_ROOT_PATH + "/" + DEFAULT_PROFILE_IMAGE_FILE_NAME);
+        cardRepository.save(card);
+        return cardResponse(card);
     }
 
     @Transactional
