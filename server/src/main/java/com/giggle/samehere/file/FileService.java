@@ -27,15 +27,15 @@ public class FileService {
 
     public String saveImageFile(MultipartFile multipartFile) {
         if (Objects.isNull(multipartFile) || multipartFile.isEmpty()) {
-            return ROOT_PATH + DEFAULT_FILE_NAME;
+            return ROOT_PATH + "/" +DEFAULT_FILE_NAME;
         }
         try (InputStream inputStream = multipartFile.getInputStream()) {
             final MultipartFileName fileName = MultipartFileName.of(multipartFile);
             saveFile(inputStream, fileName.asPathIn(directoryPath()));
-            return ROOT_PATH + fileName.asString();
+            return ROOT_PATH + "/" + fileName.asString();
         } catch (FileUploadException | IOException e) {
             e.printStackTrace();
-            return ROOT_PATH + DEFAULT_FILE_NAME;
+            return ROOT_PATH + "/"+ DEFAULT_FILE_NAME;
         }
     }
 

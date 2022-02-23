@@ -4,7 +4,6 @@ import com.giggle.samehere.card.domain.Card;
 import com.giggle.samehere.card.domain.CardItem;
 import com.giggle.samehere.card.domain.CardItemRepository;
 import com.giggle.samehere.card.domain.CardRepository;
-import com.giggle.samehere.card.dto.CardItemResponse;
 import com.giggle.samehere.card.dto.CardRequest;
 import com.giggle.samehere.card.dto.CardResponse;
 import com.giggle.samehere.card.dto.CardSimpleResponse;
@@ -15,7 +14,6 @@ import com.giggle.samehere.group.domain.CardGroupRepository;
 import com.giggle.samehere.group.dto.GroupResponse;
 import com.giggle.samehere.item.domain.Item;
 import com.giggle.samehere.item.domain.ItemRepository;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -23,6 +21,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CardService {
+
+    private static final String PROFILE_IMAGE_REQUEST_ROOT_PATH = "/resource";
+    private static final String DEFAULT_PROFILE_IMAGE_FILE_NAME = "default.png";
 
     private final GroupService groupService;
     private final CardRepository cardRepository;
@@ -48,23 +49,26 @@ public class CardService {
     public CardResponse create(CardRequest request, String imageFile) {
         final Card card = request.toCard(imageFile);
         cardRepository.save(card);
-        return CardResponse.of(card, Collections.emptyList(), Collections.emptyList());
+        return cardResponse(card);
+    }
+
+    @Transactional
+    public CardResponse create(CardRequest request) {
+        return create(request, PROFILE_IMAGE_REQUEST_ROOT_PATH + "/" + DEFAULT_PROFILE_IMAGE_FILE_NAME);
     }
 
     @Transactional
     public CardResponse createInGroup(Long groupId, CardRequest request, String imageFile) {
         final Card card = request.toCard(imageFile);
         cardRepository.save(card);
-        final List<GroupResponse> groupResponses = groupService.enter(groupId, card);
-        return CardResponse.of(card, Collections.emptyList(), groupResponses);
+        groupService.enter(groupId, card);
+        return cardResponse(card);
     }
 
     @Transactional(readOnly = true)
     public CardResponse findById(Long id) {
         final Card card = getCard(id);
-        final List<CardItem> cardItems = cardItemRepository.findAllByCardId(card.getId());
-        final List<GroupResponse> groups = groupService.findAllByCard(card);
-        return CardResponse.of(card, CardItemResponse.listOf(cardItems), groups);
+        return cardResponse(card);
     }
 
     @Transactional(readOnly = true)
@@ -80,13 +84,11 @@ public class CardService {
         card.update(request.toCard(card.getPhotosImagePath()));
 
         final List<CardItem> cardItems = getRequestCardItems(request, id);
-        cardItems.forEach(CardItem::validateAnswer);
-
         cardItemRepository.deleteAllByCardId(id);
         cardItemRepository.saveAll(cardItems);
 
         final List<GroupResponse> groups = groupService.findAllByCard(card);
-        return CardResponse.of(card, CardItemResponse.listOf(cardItems), groups);
+        return CardResponse.of(card, cardItems, groups);
     }
 
     private List<CardItem> getRequestCardItems(CardRequest request, Long cardId) {
@@ -98,9 +100,8 @@ public class CardService {
     @Transactional
     public CardResponse enterInGroup(Long cardId, Long groupId) {
         final Card card = getCard(cardId);
-        final List<GroupResponse> groupResponses = groupService.enter(groupId, card);
-        final List<CardItem> cardItems = cardItemRepository.findAllByCardId(card.getId());
-        return CardResponse.of(card, CardItemResponse.listOf(cardItems), groupResponses);
+        groupService.enter(groupId, card);
+        return cardResponse(card);
     }
 
     private Item getItem(Long itemId) {
@@ -109,5 +110,11 @@ public class CardService {
 
     private Card getCard(Long targetId) {
         return cardRepository.findById(targetId).orElseThrow(() -> new CardException("존재하지 않는 카드입니다."));
+    }
+
+    private CardResponse cardResponse(Card card) {
+        final List<CardItem> cardItems = cardItemRepository.findAllByCardId(card.getId());
+        final List<GroupResponse> groups = groupService.findAllByCard(card);
+        return CardResponse.of(card, cardItems, groups);
     }
 }

@@ -1,4 +1,4 @@
-package com.giggle.samehere.item.service;
+package com.giggle.samehere.item.application;
 
 import com.giggle.samehere.item.domain.Item;
 import com.giggle.samehere.item.domain.ItemRepository;

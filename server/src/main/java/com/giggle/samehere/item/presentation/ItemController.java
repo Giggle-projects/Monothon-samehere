@@ -2,7 +2,7 @@ package com.giggle.samehere.item.presentation;
 
 import com.giggle.samehere.item.dto.ItemRequest;
 import com.giggle.samehere.item.dto.ItemResponse;
-import com.giggle.samehere.item.service.ItemService;
+import com.giggle.samehere.item.application.ItemService;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

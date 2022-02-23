@@ -6,6 +6,7 @@ import com.giggle.samehere.card.dto.CardResponse;
 import com.giggle.samehere.card.dto.CardSimpleResponse;
 import com.giggle.samehere.file.FileService;
 import java.util.List;
+import java.util.Objects;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,6 +35,10 @@ public class CardController {
             CardRequest request,
             @RequestParam(value = "image", required = false) MultipartFile multipartFile
     ) {
+        if(Objects.isNull(multipartFile) || multipartFile.isEmpty()) {
+            return ResponseEntity.ok(cardService.create(request));
+        }
+
         final String fileName = fileService.saveImageFile(multipartFile);
         final CardResponse response = cardService.create(request, fileName);
         return ResponseEntity.ok(response);
