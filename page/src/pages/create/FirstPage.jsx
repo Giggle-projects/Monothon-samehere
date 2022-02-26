@@ -4,7 +4,6 @@ import Button from "../../components/common/Button";
 import ProfileImageInput from "../../components/ProfileImageInput";
 
 const FirstPage = (props) => {
-
   const {
     name,
     gender,
@@ -32,7 +31,7 @@ const FirstPage = (props) => {
     </div>
     <div className="content">
       <ProfileImageInput 
-        onChange={(e) => e.target.files && props.setFile(e.target.files[0])}
+        {...props}
       />
       <Input
           value={name}

@@ -84,12 +84,13 @@ const Create = () => {
   return (
       <MobileTemplate>
         <CreateStyle>
-          {page === 0 ? (<
-                  FirstPage
+          {page === 0 ? (
+              <FirstPage
                   essentialAnswers={essentialAnswers}
                   setFile={file => setFile(file)}
                   setPage={page => setPage(page)}
                   onChangeEssentialAnswer={onChangeEssentialAnswer}
+                  file={file}
               />)
               : (<SecondPage
                   essentialAnswers={essentialAnswers + file}
@@ -150,6 +151,13 @@ const CreateStyle = styled.div`
       display: flex;
       align-items: center;
       justify-content: center;
+    }
+    & img {
+      min-width: 100px;
+      min-height: 100px;
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
     }
   }
   & > .title {
