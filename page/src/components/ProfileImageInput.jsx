@@ -4,7 +4,6 @@ const ProfileImageInput = (props) => {
 
   const handleChange = e => {
     e.target.files[0] && props.setFile(e.target.files[0]);
-    props.setFileUrl(URL.createObjectURL(e.target.files[0]));
   };
 
   return <>
