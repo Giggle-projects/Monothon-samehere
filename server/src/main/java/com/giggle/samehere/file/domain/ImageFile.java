@@ -1,9 +1,14 @@
 package com.giggle.samehere.file.domain;
 
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.util.UUID;
+
+import com.giggle.samehere.file.dto.ImageFileResponse;
+import com.giggle.samehere.file.exception.FileUploadException;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,9 +22,20 @@ public class ImageFile {
 
     public static ImageFile of(Path directory, MultipartFile multipartFile) {
         assert multipartFile.getOriginalFilename() != null;
+
+        try (InputStream inputStream = multipartFile.getInputStream()) {
+            final ImageFile imageFile = new ImageFile(directory);
+            Files.copy(inputStream, uniquePath(directory, multipartFile), StandardCopyOption.REPLACE_EXISTING);
+            return imageFile;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new FileUploadException();
+        }
+    }
+
+    private static Path uniquePath(Path directoryPath, MultipartFile multipartFile) {
         final String fileName = LocalDateTime.now() + StringUtils.cleanPath(multipartFile.getOriginalFilename());
-        final Path path = uniquePath(directory.resolve(fileName));
-        return new ImageFile(path);
+        return uniquePath(directoryPath.resolve(fileName));
     }
 
     private static Path uniquePath(Path path) {

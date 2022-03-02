@@ -20,14 +20,8 @@ public class ImageFileService {
     private String PHOTO_UPLOAD_FOLDER;
 
     public ImageFileResponse save(MultipartFile multipartFile) {
-        try (InputStream inputStream = multipartFile.getInputStream()) {
-            final ImageFile imageFile = ImageFile.of(directory(), multipartFile);
-            Files.copy(inputStream, imageFile.path(), StandardCopyOption.REPLACE_EXISTING);
-            return ImageFileResponse.of(imageFile);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new FileUploadException();
-        }
+        final ImageFile imageFile = ImageFile.of(directory(), multipartFile);
+        return ImageFileResponse.of(imageFile);
     }
 
     private Path directory() throws IOException {
