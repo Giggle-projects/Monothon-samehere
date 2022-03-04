@@ -13,7 +13,7 @@ const ProfileCard: FC<Props> = ({ name, gender, email, job, imageUrl }) => {
   return (
     <ProfileCardStyle>
       <div className="profile-card">
-        <img src={`http://localhost:8080${imageUrl}`} />
+        <img src={`http://localhost:8080/`+`${imageUrl}`} />
         <div className="right">
           <div className="name">
             {name} | {gender}

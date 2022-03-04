@@ -1,6 +1,10 @@
 package com.giggle.samehere.card.application;
 
-import com.giggle.samehere.card.domain.*;
+import com.giggle.samehere.card.domain.Card;
+import com.giggle.samehere.card.domain.CardItem;
+import com.giggle.samehere.card.domain.CardItemRepository;
+import com.giggle.samehere.card.domain.CardRepository;
+import com.giggle.samehere.card.domain.ImageFile;
 import com.giggle.samehere.card.dto.CardRequest;
 import com.giggle.samehere.card.dto.CardResponse;
 import com.giggle.samehere.card.dto.CardSimpleResponse;
@@ -13,13 +17,12 @@ import com.giggle.samehere.group.domain.GroupRepository;
 import com.giggle.samehere.group.exception.GroupException;
 import com.giggle.samehere.item.domain.Item;
 import com.giggle.samehere.item.domain.ItemRepository;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class CardService {
@@ -52,7 +55,7 @@ public class CardService {
 
     @Transactional
     public CardResponse create(CardRequest request, MultipartFile multipartFile) {
-        try{
+        try {
             final ImageFile imageFile = ImageFile.save(IMAGE_FOLDER_PATH, multipartFile);
             final Card card = request.toCard(imageFile);
             cardRepository.save(card);
@@ -64,7 +67,7 @@ public class CardService {
 
     @Transactional
     public CardResponse create(CardRequest request) {
-        final ImageFile imageFile = ImageFile.pathOf(DEFAULT_PROFILE_IMAGE_FILE_NAME);
+        final ImageFile imageFile = ImageFile.pathOf(IMAGE_FOLDER_PATH + DEFAULT_PROFILE_IMAGE_FILE_NAME);
         final Card card = request.toCard(imageFile);
         cardRepository.save(card);
         return cardResponse(card);

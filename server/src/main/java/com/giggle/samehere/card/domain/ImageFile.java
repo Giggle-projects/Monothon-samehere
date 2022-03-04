@@ -13,7 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 public class ImageFile {
 
-    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd.HH:mm:ss");
 
     private final Path filePath;
 

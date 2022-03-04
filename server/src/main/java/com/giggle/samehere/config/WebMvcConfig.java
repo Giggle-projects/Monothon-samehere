@@ -31,7 +31,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         final Path fileRoot = Paths.get("./" + cardUploadFolderName).toAbsolutePath().normalize();
         registry
-                .addResourceHandler("/resources/**")
+                .addResourceHandler("/"+cardUploadFolderName+"/**")
                 .addResourceLocations(fileRoot.toUri().toString());
     }
 }
