@@ -1,8 +1,8 @@
 package com.giggle.samehere.card.domain;
 
-import java.util.List;
-
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.List;
 
 public interface CardItemRepository extends JpaRepository<CardItem, Long> {
 

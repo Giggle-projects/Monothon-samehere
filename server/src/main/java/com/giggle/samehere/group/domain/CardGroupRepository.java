@@ -9,5 +9,6 @@ public interface CardGroupRepository extends JpaRepository<CardGroup, Long> {
     List<CardGroup> findAllByCard(Card card);
 
     List<CardGroup> findAllByGroup(Group group);
+
     List<CardGroup> findAllByGroupId(Long groupId);
 }

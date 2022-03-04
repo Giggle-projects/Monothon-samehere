@@ -1,4 +1,4 @@
-package com.giggle.samehere.file.exception;
+package com.giggle.samehere.card.exception;
 
 public class FileUploadException extends RuntimeException {
 

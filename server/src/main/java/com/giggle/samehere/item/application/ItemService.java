@@ -1,13 +1,14 @@
-package com.giggle.samehere.item.service;
+package com.giggle.samehere.item.application;
 
 import com.giggle.samehere.item.domain.Item;
 import com.giggle.samehere.item.domain.ItemRepository;
 import com.giggle.samehere.item.dto.ItemRequest;
 import com.giggle.samehere.item.dto.ItemResponse;
-import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ItemService {

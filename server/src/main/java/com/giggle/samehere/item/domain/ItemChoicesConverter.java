@@ -3,9 +3,10 @@ package com.giggle.samehere.item.domain;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.List;
+
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
+import java.util.List;
 
 @Converter
 public class ItemChoicesConverter implements AttributeConverter<List<String>, String> {

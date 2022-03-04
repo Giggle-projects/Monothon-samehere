@@ -1,26 +1,21 @@
 package com.giggle.samehere.group.application;
 
-import com.giggle.samehere.card.domain.Card;
-import com.giggle.samehere.group.domain.CardGroup;
-import com.giggle.samehere.group.domain.CardGroupRepository;
 import com.giggle.samehere.group.domain.Group;
 import com.giggle.samehere.group.domain.GroupRepository;
 import com.giggle.samehere.group.dto.GroupRequest;
 import com.giggle.samehere.group.dto.GroupResponse;
-import com.giggle.samehere.group.exception.GroupException;
-import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class GroupService {
 
-    private final CardGroupRepository cardGroupRepository;
     private final GroupRepository groupRepository;
 
-    public GroupService(CardGroupRepository cardGroupRepository, GroupRepository groupRepository) {
-        this.cardGroupRepository = cardGroupRepository;
+    public GroupService(GroupRepository groupRepository) {
         this.groupRepository = groupRepository;
     }
 
@@ -49,31 +44,6 @@ public class GroupService {
         final Group group = findGroupById(id);
         group.update(request.toEntity());
         return GroupResponse.of(group);
-    }
-
-    @Transactional
-    public List<GroupResponse> enter(Long groupId, Card card) {
-        final Group enteringGroup = findGroupById(groupId);
-        checkDuplicated(card, enteringGroup);
-
-        cardGroupRepository.save(new CardGroup(card, enteringGroup));
-        return findAllByCard(card);
-    }
-
-    private void checkDuplicated(Card card, Group enteringGroup) {
-        cardGroupRepository.findAllByCard(card).stream()
-                .filter(it -> it.isGroup(enteringGroup))
-                .findAny()
-                .ifPresent(it -> {
-                    throw new GroupException("이미 가입된 카드입니다.");
-                });
-    }
-
-    @Transactional(readOnly = true)
-    public List<GroupResponse> findAllByCard(Card card) {
-        final List<CardGroup> cardGroups = cardGroupRepository.findAllByCard(card);
-        final List<Group> groups = cardGroups.stream().map(CardGroup::getGroup).collect(Collectors.toList());
-        return GroupResponse.listOf(groups);
     }
 
     private Group findGroupById(Long id) {

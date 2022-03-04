@@ -1,6 +1,8 @@
 package com.giggle.samehere.card.dto;
 
 import com.giggle.samehere.card.domain.Card;
+import com.giggle.samehere.card.domain.CardItem;
+import com.giggle.samehere.group.domain.Group;
 import com.giggle.samehere.group.dto.GroupResponse;
 
 import java.util.List;
@@ -27,16 +29,16 @@ public class CardResponse {
         this.cardItems = cardItems;
     }
 
-    public static CardResponse of(Card card, List<CardItemResponse> cardItems, List<GroupResponse> groups) {
+    public static CardResponse of(Card card, List<CardItem> cardItems, List<Group> groups) {
         return new CardResponse(
                 card.getId(),
                 card.getName(),
                 card.getEmail(),
                 card.getGender(),
                 card.getProfession(),
-                card.getImage(),
-                groups,
-                cardItems
+                card.getImagePath(),
+                GroupResponse.listOf(groups),
+                CardItemResponse.listOf(cardItems)
         );
     }
 

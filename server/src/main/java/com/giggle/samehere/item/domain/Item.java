@@ -1,17 +1,11 @@
 package com.giggle.samehere.item.domain;
 
 import com.giggle.samehere.item.exception.ItemException;
+
+import javax.persistence.*;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import javax.persistence.Column;
-import javax.persistence.Convert;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 
 @Entity
 public class Item {
@@ -28,7 +22,8 @@ public class Item {
     @Convert(converter = ItemChoicesConverter.class)
     private List<String> itemChoices = Collections.emptyList();
 
-    protected Item() {}
+    protected Item() {
+    }
 
     private Item(ItemAnswerType answerType, String name, List<String> itemChoices) {
         this.answerType = answerType;
@@ -49,11 +44,11 @@ public class Item {
     }
 
     public void validateAnswer(String answer) {
-        if(answerType == ItemAnswerType.MULTIPLE) {
+        if (answerType == ItemAnswerType.MULTIPLE) {
             itemChoices.stream()
                     .filter(it -> it.equals(answer))
                     .findAny()
-                    .orElseThrow(() -> new ItemException("\'"+answer+"\'는 " + name + "의 답변이 될 수 없습니다."));
+                    .orElseThrow(() -> new ItemException("\'" + answer + "\'는 " + name + "의 답변이 될 수 없습니다."));
         }
     }
 
