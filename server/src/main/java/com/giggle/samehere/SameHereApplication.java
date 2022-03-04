@@ -4,12 +4,13 @@ import com.giggle.samehere.group.domain.Group;
 import com.giggle.samehere.group.domain.GroupRepository;
 import com.giggle.samehere.item.domain.Item;
 import com.giggle.samehere.item.domain.ItemRepository;
-import java.util.Arrays;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Component;
+
+import java.util.Arrays;
 
 @SpringBootApplication
 public class SameHereApplication {

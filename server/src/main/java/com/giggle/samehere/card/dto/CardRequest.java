@@ -1,6 +1,7 @@
 package com.giggle.samehere.card.dto;
 
 import com.giggle.samehere.card.domain.Card;
+import com.giggle.samehere.card.domain.ImageFile;
 
 import java.util.List;
 
@@ -13,7 +14,8 @@ public class CardRequest {
     private String password;
     private List<CardItemRequest> cardItems;
 
-    public CardRequest() {}
+    public CardRequest() {
+    }
 
     public CardRequest(String name, String email, String gender, String profession,
                        String password, List<CardItemRequest> cardItems) {
@@ -27,6 +29,10 @@ public class CardRequest {
 
     public Card toCard(String imageName) {
         return new Card(name, email, gender, profession, imageName, password);
+    }
+
+    public Card toCard(ImageFile imageFile) {
+        return new Card(name, email, gender, profession, imageFile.path().toString(), password);
     }
 
     public String getName() {

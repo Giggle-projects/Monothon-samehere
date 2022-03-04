@@ -1,6 +1,6 @@
-package com.giggle.samehere.file.dto;
+package com.giggle.samehere.card.dto;
 
-import com.giggle.samehere.file.domain.ImageFile;
+import com.giggle.samehere.card.domain.ImageFile;
 
 public class ImageFileResponse {
 

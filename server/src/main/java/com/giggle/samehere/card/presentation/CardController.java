@@ -4,40 +4,29 @@ import com.giggle.samehere.card.application.CardService;
 import com.giggle.samehere.card.dto.CardRequest;
 import com.giggle.samehere.card.dto.CardResponse;
 import com.giggle.samehere.card.dto.CardSimpleResponse;
-import com.giggle.samehere.file.domain.ImageFile;
-import com.giggle.samehere.file.application.ImageFileService;
-import com.giggle.samehere.file.dto.ImageFileResponse;
-import com.giggle.samehere.file.exception.FileUploadException;
-import java.util.List;
+import com.giggle.samehere.card.exception.FileUploadException;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("cards")
 public class CardController {
 
     private final CardService cardService;
-    private final ImageFileService imageFileService;
 
-    public CardController(CardService cardService, ImageFileService imageFileService) {
+    public CardController(CardService cardService) {
         this.cardService = cardService;
-        this.imageFileService = imageFileService;
     }
 
     @PostMapping
     public ResponseEntity<CardResponse> create(
             CardRequest request,
-            @RequestParam(required = false) MultipartFile image
+            @RequestParam(required = false) MultipartFile multipartFile
     ) {
-        final CardResponse response = createCard(request, image);
+        final CardResponse response = createCard(request, multipartFile);
         return ResponseEntity.ok(response);
     }
 
@@ -45,16 +34,15 @@ public class CardController {
     public ResponseEntity<CardResponse> create(
             @PathVariable Long groupId,
             CardRequest request,
-            @RequestParam(required = false) MultipartFile image
+            @RequestParam(required = false) MultipartFile multipartFile
     ) {
-        final CardResponse savedCard = createCard(request, image);
+        final CardResponse savedCard = createCard(request, multipartFile);
         return joinInGroup(savedCard.getId(), groupId);
     }
 
     private CardResponse createCard(CardRequest request, MultipartFile multipartFile) {
         try {
-            final ImageFileResponse imageFile = imageFileService.save(multipartFile);
-            return cardService.create(request, imageFile);
+            return cardService.create(request, multipartFile);
         } catch (FileUploadException e) {
             return cardService.create(request);
         }

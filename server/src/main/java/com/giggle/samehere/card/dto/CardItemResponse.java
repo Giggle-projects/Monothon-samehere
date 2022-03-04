@@ -16,7 +16,7 @@ public class CardItemResponse {
     }
 
     public static List<CardItemResponse> listOf(List<CardItem> cardItems) {
-        return cardItems.stream().map(it-> of(it)).collect(Collectors.toList());
+        return cardItems.stream().map(it -> of(it)).collect(Collectors.toList());
     }
 
     public static CardItemResponse of(CardItem cardItem) {

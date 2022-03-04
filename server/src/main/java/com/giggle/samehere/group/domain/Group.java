@@ -1,10 +1,10 @@
 package com.giggle.samehere.group.domain;
 
-import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.util.Objects;
 
 @Table(name = "GROUPS")
 @Entity
@@ -16,7 +16,8 @@ public class Group {
     private String name;
     private String password;
 
-    public Group() {}
+    public Group() {
+    }
 
     public Group(String name, String password) {
         this.name = name;

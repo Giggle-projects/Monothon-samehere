@@ -1,7 +1,7 @@
 package com.giggle.samehere;
 
 import com.giggle.samehere.card.exception.CardException;
-import com.giggle.samehere.file.exception.FileUploadException;
+import com.giggle.samehere.card.exception.FileUploadException;
 import com.giggle.samehere.group.exception.GroupException;
 import com.giggle.samehere.item.exception.ItemException;
 import org.slf4j.Logger;

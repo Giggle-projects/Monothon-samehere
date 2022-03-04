@@ -1,14 +1,10 @@
 package com.giggle.samehere.card.application;
 
-import com.giggle.samehere.card.domain.Card;
-import com.giggle.samehere.card.domain.CardItem;
-import com.giggle.samehere.card.domain.CardItemRepository;
-import com.giggle.samehere.card.domain.CardRepository;
+import com.giggle.samehere.card.domain.*;
 import com.giggle.samehere.card.dto.CardRequest;
 import com.giggle.samehere.card.dto.CardResponse;
 import com.giggle.samehere.card.dto.CardSimpleResponse;
 import com.giggle.samehere.card.exception.CardException;
-import com.giggle.samehere.file.dto.ImageFileResponse;
 import com.giggle.samehere.group.domain.CardGroup;
 import com.giggle.samehere.group.domain.CardGroupRepository;
 import com.giggle.samehere.group.domain.Group;
@@ -16,10 +12,14 @@ import com.giggle.samehere.group.domain.GroupRepository;
 import com.giggle.samehere.group.exception.GroupException;
 import com.giggle.samehere.item.domain.Item;
 import com.giggle.samehere.item.domain.ItemRepository;
-import java.util.List;
-import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CardService {
@@ -32,6 +32,9 @@ public class CardService {
     private final CardItemRepository cardItemRepository;
     private final GroupRepository groupRepository;
     private final CardGroupRepository cardGroupRepository;
+
+    @Value("${cards.profile.image.upload.folder}")
+    private String PHOTO_UPLOAD_FOLDER;
 
     public CardService(
             CardRepository cardRepository,
@@ -48,8 +51,9 @@ public class CardService {
     }
 
     @Transactional
-    public CardResponse create(CardRequest request, ImageFileResponse imageFile) {
-        final Card card = request.toCard(imageFile.getPath());
+    public CardResponse create(CardRequest request, MultipartFile multipartFile) {
+        final ImageFile profileImage = ImageFile.save(Paths.get(PHOTO_UPLOAD_FOLDER), multipartFile);
+        final Card card = request.toCard(profileImage);
         cardRepository.save(card);
         return cardResponse(card);
     }

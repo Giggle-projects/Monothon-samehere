@@ -1,11 +1,8 @@
 package com.giggle.samehere.card.domain;
 
 import com.giggle.samehere.item.domain.Item;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+
+import javax.persistence.*;
 
 @Entity
 public class CardItem {
@@ -19,7 +16,8 @@ public class CardItem {
     private Item item;
     private String answer;
 
-    protected CardItem() {}
+    protected CardItem() {
+    }
 
     public CardItem(Long cardId, Item item, String answer) {
         this.cardId = cardId;

@@ -3,7 +3,6 @@ package com.giggle.samehere.card.domain;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import org.springframework.data.annotation.Transient;
 
 @Entity
 public class Card {
@@ -18,7 +17,8 @@ public class Card {
     private String image;
     private String password;
 
-    public Card() {}
+    public Card() {
+    }
 
     public Card(String name, String email, String gender, String profession, String image, String password) {
         this.name = name;

@@ -1,6 +1,7 @@
 package com.giggle.samehere.item.dto;
 
 import com.giggle.samehere.item.domain.Item;
+
 import java.util.List;
 import java.util.Objects;
 
