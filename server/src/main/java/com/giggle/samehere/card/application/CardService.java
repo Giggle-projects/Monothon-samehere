@@ -27,14 +27,14 @@ public class CardService {
     private static final String PROFILE_IMAGE_REQUEST_ROOT_PATH = "/resource";
     private static final String DEFAULT_PROFILE_IMAGE_FILE_NAME = "default.png";
 
+    @Value("${cards.profile.image.upload.folder}")
+    private String PHOTO_UPLOAD_FOLDER;
+
     private final CardRepository cardRepository;
     private final ItemRepository itemRepository;
     private final CardItemRepository cardItemRepository;
     private final GroupRepository groupRepository;
     private final CardGroupRepository cardGroupRepository;
-
-    @Value("${cards.profile.image.upload.folder}")
-    private String PHOTO_UPLOAD_FOLDER;
 
     public CardService(
             CardRepository cardRepository,
