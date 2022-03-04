@@ -5,6 +5,7 @@ import com.giggle.samehere.card.dto.CardRequest;
 import com.giggle.samehere.card.dto.CardResponse;
 import com.giggle.samehere.card.dto.CardSimpleResponse;
 import com.giggle.samehere.card.exception.FileUploadException;
+import java.util.Objects;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,29 +24,28 @@ public class CardController {
 
     @PostMapping
     public ResponseEntity<CardResponse> create(
-            CardRequest request,
-            @RequestParam(required = false) MultipartFile multipartFile
+            @ModelAttribute CardRequest request,
+            @RequestParam(required = false) MultipartFile image
     ) {
-        final CardResponse response = createCard(request, multipartFile);
+        final CardResponse response = createCard(request, image);
         return ResponseEntity.ok(response);
     }
 
     @PostMapping("/groups/{groupId}")
     public ResponseEntity<CardResponse> create(
             @PathVariable Long groupId,
-            CardRequest request,
-            @RequestParam(required = false) MultipartFile multipartFile
+            @ModelAttribute CardRequest request,
+            @RequestParam(required = false) MultipartFile image
     ) {
-        final CardResponse savedCard = createCard(request, multipartFile);
+        final CardResponse savedCard = createCard(request, image);
         return joinInGroup(savedCard.getId(), groupId);
     }
 
     private CardResponse createCard(CardRequest request, MultipartFile multipartFile) {
-        try {
-            return cardService.create(request, multipartFile);
-        } catch (FileUploadException e) {
+        if(Objects.isNull(multipartFile) || multipartFile.isEmpty()) {
             return cardService.create(request);
         }
+        return cardService.create(request, multipartFile);
     }
 
     @PostMapping("/{cardId}/groups/{groupId}")

@@ -23,10 +23,6 @@ public class CardItem {
         this.cardId = cardId;
         this.item = item;
         this.answer = answer;
-        validateAnswer();
-    }
-
-    public void validateAnswer() {
         item.validateAnswer(answer);
     }
 

@@ -20,7 +20,7 @@ public class CardSimpleResponse {
     }
 
     public static CardSimpleResponse of(Card card) {
-        return new CardSimpleResponse(card.getId(), card.getName(), card.getGender(), card.getImage());
+        return new CardSimpleResponse(card.getId(), card.getName(), card.getGender(), card.getImagePath());
     }
 
     public static List<CardSimpleResponse> listOf(List<Card> cardsInGroup) {

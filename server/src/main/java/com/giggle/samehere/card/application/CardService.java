@@ -5,6 +5,7 @@ import com.giggle.samehere.card.dto.CardRequest;
 import com.giggle.samehere.card.dto.CardResponse;
 import com.giggle.samehere.card.dto.CardSimpleResponse;
 import com.giggle.samehere.card.exception.CardException;
+import com.giggle.samehere.card.exception.FileUploadException;
 import com.giggle.samehere.group.domain.CardGroup;
 import com.giggle.samehere.group.domain.CardGroupRepository;
 import com.giggle.samehere.group.domain.Group;
@@ -17,18 +18,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class CardService {
 
-    private static final String PROFILE_IMAGE_REQUEST_ROOT_PATH = "/resource";
-    private static final String DEFAULT_PROFILE_IMAGE_FILE_NAME = "default.png";
-
     @Value("${cards.profile.image.upload.folder}")
-    private String PHOTO_UPLOAD_FOLDER;
+    private String IMAGE_FOLDER_PATH;
+
+    @Value("${cards.profile.image.default.name}")
+    private String DEFAULT_PROFILE_IMAGE_FILE_NAME;
 
     private final CardRepository cardRepository;
     private final ItemRepository itemRepository;
@@ -52,15 +52,20 @@ public class CardService {
 
     @Transactional
     public CardResponse create(CardRequest request, MultipartFile multipartFile) {
-        final ImageFile profileImage = ImageFile.save(Paths.get(PHOTO_UPLOAD_FOLDER), multipartFile);
-        final Card card = request.toCard(profileImage);
-        cardRepository.save(card);
-        return cardResponse(card);
+        try{
+            final ImageFile imageFile = ImageFile.save(IMAGE_FOLDER_PATH, multipartFile);
+            final Card card = request.toCard(imageFile);
+            cardRepository.save(card);
+            return cardResponse(card);
+        } catch (FileUploadException fue) {
+            return create(request);
+        }
     }
 
     @Transactional
     public CardResponse create(CardRequest request) {
-        final Card card = request.toCard(PROFILE_IMAGE_REQUEST_ROOT_PATH + "/" + DEFAULT_PROFILE_IMAGE_FILE_NAME);
+        final ImageFile imageFile = ImageFile.pathOf(DEFAULT_PROFILE_IMAGE_FILE_NAME);
+        final Card card = request.toCard(imageFile);
         cardRepository.save(card);
         return cardResponse(card);
     }
@@ -85,13 +90,14 @@ public class CardService {
 
     @Transactional
     public CardResponse update(Long id, CardRequest request) {
-        final Card card = getCard(id);
-        card.update(request.toCard(card.getPhotosImagePath()));
+        final Card oldCard = getCard(id);
+        final Card newCard = request.toCard(oldCard.getImagePath());
+        oldCard.update(newCard);
 
         final List<CardItem> cardItems = getRequestCardItems(request, id);
         cardItemRepository.deleteAllByCardId(id);
         cardItemRepository.saveAll(cardItems);
-        return cardResponse(card);
+        return cardResponse(oldCard);
     }
 
     private List<CardItem> getRequestCardItems(CardRequest request, Long cardId) {

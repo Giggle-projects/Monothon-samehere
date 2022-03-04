@@ -14,18 +14,18 @@ public class Card {
     private String email;
     private String gender;
     private String profession;
-    private String image;
+    private String imagePath;
     private String password;
 
     public Card() {
     }
 
-    public Card(String name, String email, String gender, String profession, String image, String password) {
+    public Card(String name, String email, String gender, String profession, String imagePath, String password) {
         this.name = name;
         this.email = email;
         this.gender = gender;
         this.profession = profession;
-        this.image = image;
+        this.imagePath = imagePath;
         this.password = password;
     }
 
@@ -58,14 +58,8 @@ public class Card {
         return profession;
     }
 
-    public String getImage() {
-        return image;
-    }
-
-    // TODO :: 저장 경로 수정
-    public String getPhotosImagePath() {
-        if (image == null || id == null) return null;
-        return "/card-photos/" + id + "/" + image;
+    public String getImagePath() {
+        return imagePath;
     }
 
     public String getPassword() {

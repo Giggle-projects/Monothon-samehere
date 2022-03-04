@@ -36,7 +36,7 @@ public class CardResponse {
                 card.getEmail(),
                 card.getGender(),
                 card.getProfession(),
-                card.getImage(),
+                card.getImagePath(),
                 GroupResponse.listOf(groups),
                 CardItemResponse.listOf(cardItems)
         );
