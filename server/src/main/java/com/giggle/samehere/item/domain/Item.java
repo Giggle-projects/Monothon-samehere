@@ -1,11 +1,17 @@
 package com.giggle.samehere.item.domain;
 
 import com.giggle.samehere.item.exception.ItemException;
-
-import javax.persistence.*;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import javax.persistence.Column;
+import javax.persistence.Convert;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 @Entity
 public class Item {

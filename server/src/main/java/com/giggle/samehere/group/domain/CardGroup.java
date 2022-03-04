@@ -1,7 +1,6 @@
 package com.giggle.samehere.group.domain;
 
 import com.giggle.samehere.card.domain.Card;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;

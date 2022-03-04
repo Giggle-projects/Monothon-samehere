@@ -4,13 +4,19 @@ import com.giggle.samehere.card.application.CardService;
 import com.giggle.samehere.card.dto.CardRequest;
 import com.giggle.samehere.card.dto.CardResponse;
 import com.giggle.samehere.card.dto.CardSimpleResponse;
-import com.giggle.samehere.card.exception.FileUploadException;
+import java.util.List;
 import java.util.Objects;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("cards")
@@ -42,7 +48,7 @@ public class CardController {
     }
 
     private CardResponse createCard(CardRequest request, MultipartFile multipartFile) {
-        if(Objects.isNull(multipartFile) || multipartFile.isEmpty()) {
+        if (Objects.isNull(multipartFile) || multipartFile.isEmpty()) {
             return cardService.create(request);
         }
         return cardService.create(request, multipartFile);

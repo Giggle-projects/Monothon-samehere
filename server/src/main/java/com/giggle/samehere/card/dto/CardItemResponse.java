@@ -1,7 +1,6 @@
 package com.giggle.samehere.card.dto;
 
 import com.giggle.samehere.card.domain.CardItem;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,7 +15,7 @@ public class CardItemResponse {
     }
 
     public static List<CardItemResponse> listOf(List<CardItem> cardItems) {
-        return cardItems.stream().map(it -> of(it)).collect(Collectors.toList());
+        return cardItems.stream().map(CardItemResponse::of).collect(Collectors.toList());
     }
 
     public static CardItemResponse of(CardItem cardItem) {

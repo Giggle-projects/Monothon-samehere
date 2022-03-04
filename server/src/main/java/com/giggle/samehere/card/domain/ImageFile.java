@@ -45,7 +45,7 @@ public class ImageFile {
 
     private static Path filePath(Path directoryPath, MultipartFile multipartFile) {
         final String prefix = LocalDateTime.now().format(DATE_TIME_FORMATTER) + ":";
-        final String fileName = prefix+StringUtils.cleanPath(multipartFile.getOriginalFilename());
+        final String fileName = prefix + StringUtils.cleanPath(multipartFile.getOriginalFilename());
         final Path path = directoryPath.resolve(fileName);
         return uniquePath(path);
     }

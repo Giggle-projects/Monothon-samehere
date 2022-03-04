@@ -61,6 +61,7 @@ public class CardService {
             cardRepository.save(card);
             return cardResponse(card);
         } catch (FileUploadException fue) {
+            fue.printStackTrace();
             return create(request);
         }
     }

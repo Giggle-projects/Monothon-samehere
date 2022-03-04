@@ -1,7 +1,6 @@
 package com.giggle.samehere.card.dto;
 
 import com.giggle.samehere.card.domain.Card;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
