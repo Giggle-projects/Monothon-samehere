@@ -1,7 +1,6 @@
 package com.giggle.samehere.group.dto;
 
 import com.giggle.samehere.group.domain.Group;
-
 import java.util.List;
 import java.util.stream.Collectors;
 

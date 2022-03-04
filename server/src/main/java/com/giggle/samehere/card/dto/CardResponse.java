@@ -4,7 +4,6 @@ import com.giggle.samehere.card.domain.Card;
 import com.giggle.samehere.card.domain.CardItem;
 import com.giggle.samehere.group.domain.Group;
 import com.giggle.samehere.group.dto.GroupResponse;
-
 import java.util.List;
 
 public class CardResponse {
@@ -18,7 +17,14 @@ public class CardResponse {
     private List<GroupResponse> groups;
     private List<CardItemResponse> cardItems;
 
-    public CardResponse(Long id, String name, String email, String gender, String profession, String imageUrl, List<GroupResponse> groups, List<CardItemResponse> cardItems) {
+    public CardResponse(Long id,
+                        String name,
+                        String email,
+                        String gender,
+                        String profession,
+                        String imageUrl,
+                        List<GroupResponse> groups,
+                        List<CardItemResponse> cardItems) {
         this.id = id;
         this.name = name;
         this.email = email;

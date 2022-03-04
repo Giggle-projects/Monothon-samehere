@@ -2,7 +2,6 @@ package com.giggle.samehere.item.dto;
 
 import com.giggle.samehere.item.domain.Item;
 import com.giggle.samehere.item.domain.ItemAnswerType;
-
 import java.util.List;
 
 public class ItemResponse {

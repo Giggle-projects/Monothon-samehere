@@ -4,11 +4,10 @@ import com.giggle.samehere.group.domain.Group;
 import com.giggle.samehere.group.domain.GroupRepository;
 import com.giggle.samehere.group.dto.GroupRequest;
 import com.giggle.samehere.group.dto.GroupResponse;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class GroupService {
